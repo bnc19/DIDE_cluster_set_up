@@ -45,9 +45,9 @@ To map your network drive on a Mac:
 5) Go to your newly mapped network drive. On Windows your newly mapped network drive will be My PC -->:Q (or whatever letter you chose in step 4). On a Mac go to Network --> fi--san03.dide.ic.ac.uk --> Homes --> username. 
 From here create a folder and i) either copy the R files and data etc. that you need to run your model on the cluster or ii) create your R project within this folder. If you're not using R projects then make sure that you set your working directory in your R session to this location - e.g. setwd("Q:/cluster_example")
  
-6) To set up the cluster for the first time and see some examples of using the cluster, save all the R scripts in this repository in a folder on your network drive called "cluster_example". 
+6) To set up the cluster for the first time and see some examples of using the cluster, save all the R scripts in this repository in a folder on your network drive called "cluster_example". (Click on each file and click the download bottom top right). Alternatively, if you've used Github before, you can clone this whole repo by clicking the green code button, copying the SSH key then go to R --> create project --> version control --> Git --> paste the SSH key in Repository URL and create the project as a subdirectory of your Q:/ drive. 
 
-7) cluster_set_up.R first to configure your cluster settings and run a demo function. 
+7) Open cluster_set_up.R first to configure your cluster settings and run a demo function. 
 
 8) Once you are happy with running a simple function on the cluster, open cluster_model_runs.R for some further examples showing how to run multiple jobs at once. 
 
