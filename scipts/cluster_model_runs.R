@@ -5,7 +5,8 @@
 # the machine learning algorithm random forest (RF). 
 
 # I want to run each model 100 times to calculate a boostrap 95% CI, so I'm going
-# to use the cluster so I can run each job at once. 
+# to use the cluster so I can run all those jobs at once. I can also change 
+# parameter values and run those model variants at the same time. 
 
 # You can look at the code that runs the model fitting if you want, but the main 
 # purpose is to demonstrate running multiple jobs on the cluster. The code itself
@@ -20,10 +21,10 @@ setwd(root)
 ctx <- context::context_save(root,  
                             packages=c("caret", "e1071", "nnet",
                                        "ranger", "tidyverse"), 
-                            sources=c("R/funct_model_fitting.R"))
+                            sources=c("R/funct_model_fitting.R")) # function 
 
 
-# This function uses quite a bit of memory so we change the number of cores used 
+# This function uses quite a bit of memory so I set the number of cores used 
 # per job to 2 
 config <- didehpc::didehpc_config(cores = 2,  parallel = F)
 
@@ -33,7 +34,6 @@ config <- didehpc::didehpc_config(cores = 2,  parallel = F)
 # Create a queue within the context 
 obj <- didehpc::queue_didehpc(ctx, config) 
 
-
 # Import data ------------------------------------------------------------------
 
 # outcome data 
@@ -42,20 +42,21 @@ all_outcome <- as.factor(read.csv("data/all_outcome.csv")$x)
 # predictors data 
 pre_post_change_date_pred <- read.csv("data/pre_post_change_date_pred.csv")[,-1]
 
-source("R/funct_save_cluster_output.R") # load the function which will save our results 
+# load the function which will save our results 
+source("R/funct_save_cluster_output.R") 
 
 # Run the models ---------------------------------------------------------------
 
 # The lapply function on the cluster works like lapply when used locally. 
 # We're applying our function (run_model) to each element of a list. Here, I am
-# running the function 100 times using all the same parameter values (achieved)
-# by repeating 1, 100 times. 
+# running the function 100 times using all the same parameter values (achieved
+# by repeating 1, 100 times.)
 
 # If you wanted to run your function using each row in a data.frame as input, 
 # you could set X = data.frame$column_name. 
 
 
-# run the random forrest model 100 times 
+# run the random forest model 100 times 
 
 M1 <-  obj$lapply(X = rep(1,100),
                 FUN = run_model,
@@ -74,10 +75,8 @@ M1 <-  obj$lapply(X = rep(1,100),
 
 M1$status() # run to check the status of each of your 100 tasks
 
-
-
 # This also shows the names of each individual task. If one task has finished 
-# and you want to acess it whilst the rest are running, you can:
+# and you want to access it whilst the rest are running, you can:
 
 task1 <- obj$task_get("c4fea844952c536b08e0e1c7d9c7c9f1") # update the task id 
 
@@ -100,7 +99,6 @@ task1$log()
 # you can access it by running:
 
 M1 <- obj$task_bundle_get("rf") # or whatever you name your task bundle 
-
 
 
 # Next, I also want to fit the model using MLR 100 times, which I can do at the  
@@ -143,12 +141,13 @@ M4 <-  obj$lapply(X = rep(1,100),
 
 # saving model results ---------------------------------------------------------
 
-
+# e.g. save results of mlr 
 save_cluster_output(task_bundle_name = "mlr", 
                     output_path = "output")
 
 # this function extracts the results of all 100 runs, summarises them and then 
 # saves them as CSV file in a directory called output. 
 
-save_cluster_output # have a look at the code underneath 
+# have a look at the code underneath to see how to extract and merge the results 
 
+save_cluster_output 
