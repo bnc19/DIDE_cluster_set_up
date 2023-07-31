@@ -1,14 +1,15 @@
 # This repo details how to get set up on the DIDE cluster
   
 
-To get started on the cluster there are [instructions](https://mrc-ide.github.io/didehpc/articles/didehpc.html#getting-started) written by Rich and Wes, who developed the cluster. 
-You should definitely read and refer back to these instructions, however they can be high level in places and assume you have a DIDE ICT accountetc. 
-The instructions below hopefully provide a more step-by-step introduction to using the cluster.
+To get started on the cluster there are already [instructions](https://mrc-ide.github.io/didehpc/articles/didehpc.html#getting-started) written by Rich and Wes, who developed the cluster. 
+You should definitely read and refer back to these instructions, however, they can be high-level in places and assume you have a DIDE ICT account, etc. 
 
-* N.B. all instructions for VPNs, network mapping and cluster are DIDE specific. That means any imperial instructions for the above don't necessarily apply here.* 
+The instructions below and the code in this repo hopefully provide a step-by-step introduction to using the cluster.
+
+* N.B. All instructions for remote access, network mapping, and cluster are DIDE-specific. That means any imperial instructions for the above don't necessarily apply here.* 
 
 ## Useful contacts:
-* DIDE ICT: Chris De La Force or Paul Bunnett e.g. DIDE ICT accounts, computer help, VPNs, mapping your network drive.
+* DIDE ICT: Chris De La Force or Paul Bunnett e.g. DIDE ICT accounts, computer help, mapping your network drive.
 * Setting up the cluster: Wes Hinsley
 * Other cluster questions: Wes Hinsley, Rich Fitzjohn 
 
@@ -16,12 +17,13 @@ The instructions below hopefully provide a more step-by-step introduction to usi
 
 1) Email Chris De La Force or Paul Bunnett: 
 * Ask them to set you up a DIDE ICT account if you don't already have one. Your DIDE username is the same as your imperial one without ic.ac.uk (e.g. bnc19).
-* Ask them to set up you up a home share - this is a folder specific to you on the DIDE network share where you will run you cluster jobs from (see step 4). 
+* Ask them to set up you up a home share - this is a folder specific to you on the DIDE network share where you will run your cluster jobs from (see step 4). 
 
 
 2) Once you have your DIDE ICT account, email Wes and ask him to authorise you to use the cluster (send him your DIDE username). 
 
-3) If you are using a laptop or any computer where you don't log in using your DIDE ICT account you need to set up a Zscaler. ADD DETAILS HERE. If you are using a DIDE computer (or remotely accessing a DIDE computer from your laptop) you do not need to set up a VPN.
+3) If you are using a laptop or any computer where you don't log in using your DIDE ICT account you need to set up a Zscaler. If you are using a DIDE computer (or remotely accessing a DIDE computer from your laptop) you can go straight to step 4.
+
 4) The cluster cannot be run from folders saved on your computer desktop and the like - this means nothing with a file path starting C: ! Instead, you need to run everything from a folder on a network share. To do this you map your network drive to your folder on the network share. The path for this is: \\fi--san03.dide.ic.ac.uk\homes\username, where username is your DIDE username. 
 
 To map your network drive on a Windows:
