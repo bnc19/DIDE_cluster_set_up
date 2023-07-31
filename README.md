@@ -25,8 +25,8 @@ The instructions below and the code in this repo hopefully provide a step-by-ste
 
 ####  3) Set up remote access to the DIDE network.
 * If you are using a laptop or any computer where you don't log in using your DIDE ICT account, you need to set up remote access. If you are using a DIDE computer you can go straight to step 4.
-* In the cluster instructions linked above it mentions setting up a VPN, however as of 2023 DIDE no longer uses a VPN for remote access. Instead, we use Unified Access via a product called Zscaler Private Access. 
-* To see if you already have access to Zscalar, login to https://uafiles.cc.ic.ac.uk/ - it might now work on some browsers so try an alternative browser if it doesn't work at first. If you still do not have access, Paul or Chris can request this for you.
+* In the cluster instructions linked above it mentions setting up a VPN, however as of 2023, DIDE no longer uses a VPN for remote access. Instead, we use Unified Access via a product called Zscaler Private Access. 
+* To see if you already have access to Zscalar, login to https://uafiles.cc.ic.ac.uk/ - it might not work on some browsers so try an alternative browser if it doesn't work at first. If you still do not have access, Paul or Chris can request this for you.
 * Once you have access, download Zscalar from the link on that site and log in with your imperial credentials.
 * Open up Zscalar and check the service status is on and that you're authorised. 
 
