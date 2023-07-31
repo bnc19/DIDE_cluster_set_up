@@ -1,7 +1,7 @@
 # This repo details how to get set up on the DIDE cluster
   
 
-To get started on the cluster there are excellent [instructions](https://mrc-ide.github.io/didehpc/articles/didehpc.html#getting-started) written by Rich and Wes, who developed the cluster. 
+To get started on the cluster there are [instructions](https://mrc-ide.github.io/didehpc/articles/didehpc.html#getting-started) written by Rich and Wes, who developed the cluster. 
 You should definitely read and refer back to these instructions, however they can be high level in places and assume you have a DIDE ICT accountetc. 
 The instructions below hopefully provide a more step-by-step introduction to using the cluster.
 
