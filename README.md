@@ -40,6 +40,7 @@ The cluster cannot be run from folders saved on your computer desktop and the li
 * At the top click "Map network drive"
 * In the window that appears, select any available drive letter from the Drive dropdown list (I use Q). 
 * Where is says folder, paste the path above (\\fi--san03.dide.ic.ac.uk\homes\username)
+* Tick the Reconnect at logon and Connect using different credentials check boxes.
 * When prompted to enter your credentials use DIDE\username and your DIDE password.
 
 **To map your network drive on a Mac:**
@@ -52,7 +53,7 @@ The cluster cannot be run from folders saved on your computer desktop and the li
 
 **If you get a warning here saying that the path cannot be accessed, check your home share has been set up (step 1)**
 
-Next, Go to your newly mapped network drive. On Windows your newly mapped network drive will be My PC -->:Q (or whatever letter you chose in step 4). On a Mac go to Network --> fi--san03.dide.ic.ac.uk --> Homes --> username. From here create a folder and i) either copy the R files and data etc. that you need to run your model on the cluster or ii) create your R project within this folder. If you're not using R projects then make sure that you set your working directory in your R session to this location - e.g. setwd("Q:/project_name")
+Next, Go to your newly mapped network drive. On Windows your newly mapped network drive will be My PC -->:Q. On a Mac go to Network --> fi--san03.dide.ic.ac.uk --> Homes --> username. From here create a folder and i) either copy the R files and data etc. that you need to run your model on the cluster or ii) create your R project within this folder. If you're not using R projects then make sure that you set your working directory in your R session to this location - e.g. setwd("Q:/project_name")
  
 #### 5) Configure the cluster and running jobs:  
 
