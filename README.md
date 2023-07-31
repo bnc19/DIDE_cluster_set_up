@@ -49,10 +49,17 @@ To map your network drive on a Mac:
 5) Go to your newly mapped network drive. On Windows your newly mapped network drive will be My PC -->:Q (or whatever letter you chose in step 4). On a Mac go to Network --> fi--san03.dide.ic.ac.uk --> Homes --> username. 
 From here create a folder and i) either copy the R files and data etc. that you need to run your model on the cluster or ii) create your R project within this folder. If you're not using R projects then make sure that you set your working directory in your R session to this location - e.g. setwd("Q:/project_name")
  
-6) To set up the cluster for the first time and see some examples of using the cluster, save the folders *R*, *scripts* and *data* in this repository in a folder on your network drive called "DIDE_cluster_set_up". Alternatively, if you've used Github before, you can clone this whole repo by clicking the green code button, copying the SSH key then go to R --> create project --> version control --> Git --> paste the SSH key in Repository URL and create the project as a subdirectory of your Q:/ drive.  
+6) To set up the cluster for the first time and see some examples of using the cluster, save the folders of this repository in a folder on your network drive called "DIDE_cluster_set_up":
+   * *R* - a folder containing scripts of all functions used. 
+   * *scripts* - a folder containing a script to set up the cluster and a script to run models on the cluster. 
+   * *data* - a folder containing data used for model fitting.
+  
+  In general, this is a good way to organise your projects. 
 
-7) Open *scripts/cluster_set_up.R* first to configure your cluster settings and run a demo function. 
+Alternatively, if you've used Github before, you can clone this whole repo by clicking the green code button, copying the SSH key then go to R --> create project --> version control --> Git --> paste the SSH key in Repository URL and create the project as a subdirectory of your Q:/ drive.  
 
-8) Once you are happy with running a simple function on the cluster, open cluster_model_runs.R for some further examples showing how to run multiple jobs at once. 
+8) Open *scripts/cluster_set_up.R* first to configure your cluster settings and run a demo function. 
+
+9) Once you are happy with running a simple function on the cluster, open *scripts/cluster_model_runs.R* for some further examples showing how to run multiple jobs at once. 
 
 
