@@ -10,7 +10,7 @@
 #install.packages("syncr")
 #install.packages("rrq")
 
-drat:::add("mrc-ide")
+drat:::add("mrc-ide") 
 
 options(
   didehpc.username = "bnc19",   # change to your username 
@@ -18,9 +18,7 @@ options(
 
 didehpc:::didehpc_config(credentials=list(username="bnc19"), home = "Q:/")
 
-dir.create("Q:/project_name")
-
-root <- "Q:/project_name"
+root <- "Q:/DIDE_cluster_set_up" # name of project
 setwd(root)
 
 
@@ -29,7 +27,7 @@ setwd(root)
 # make sure the files loaded in ctx are in your current working directory 
 
 ctx <- context::context_save(root,# packages=c(""), 
-                             sources="test_function.R")
+                             sources="R/funct_test.R")
 
 
 # here you should be asked to login using your dide username and password
@@ -54,7 +52,3 @@ M1$result() # will return what ever your function outputs
 # to list all submitted tasks
 
 obj$task_list()
-
-#to unsubmit
-obj$unsubmit(ML$id)
-obj$task_delete(ML$id)

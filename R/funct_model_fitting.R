@@ -38,14 +38,9 @@ fit_model = function(classifier_name,
   # hyperparameters are tuned through LOOCV
   
   
-  source('R/RF_func.R')
-  source('R/gbm_func.R')
-  source('R/NN_func.R')
-  source('R/svm_poly_func.R')
-  # source('R/svm_rad_func.R')
-  source('R/xgb_func.R')
-  source('R/MLR_func.R')
-  source('R/getCM.R')
+  source('R/funct_RF.R')
+  source('R/funct_MLR.R')
+  source('R/funct_get_CM.R')
   
   
   # given the classifier name, fit the correct model
@@ -65,7 +60,7 @@ fit_model = function(classifier_name,
   
   # predict on test data
   test_out = predict(model_fit, test_predictors)
-  
+
   
   # test_outcome = droplevels(test_outcome) don't think I need to remove levels
   # test_out = droplevels(test_out)
@@ -97,119 +92,75 @@ fit_model = function(classifier_name,
 }
 
 
-# fit model if using all data for training the model 
-
-fit_model_train_only = function(classifier_name,
-                                train_predictors,
-                                train_outcome,
-                                Seed,
-                                primary)
-{
-  
-  # This function fits one classifier on the current training data
-  # hyperparameters are tuned through LOOCV
-  
-  
-  source('R/RF_func.R')
-  source('R/gbm_func.R')
-  source('R/NN_func.R')
-  source('R/svm_poly_func.R')
-  # source('R/svm_rad_func.R')
-  source('R/xgb_func.R')
-  source('R/MLR_func.R')
-  source('R/getCM.R')
-  
-  
-  # given the classifier name, fit the correct model
-  model_fit = switch(
-    classifier_name,
-    rf = fitRf(train_predictors, train_outcome, Seed),
-    gbm = fitgbm (train_predictors, train_outcome, Seed, primary),
-    nnet = fitNnet(train_predictors, train_outcome, Seed, primary),
-    svm_poly = fit_svm_poly(train_predictors, train_outcome, Seed, primary),
-    svm_rad = fit_svm_rad(train_predictors, train_outcome, Seed, primary),
-    xgboost = fit_xgb(train_predictors, train_outcome, Seed),
-    mlr = fitlmr(train_predictors, train_outcome, Seed)
-  )
-  
-  # retrieve the highest performance values achieved by a hyper-parameter search
-  trainCM = get_CM(model_fit, classifier_name, train_outcome)
-  
-  
-  out = list(model_fit, trainCM)
-  names(out) = c("model_fit", "trainCM")
-  return(out)
-}
-
 # calculate weighted average from class specific metrics 
 
 
 weighted_av = function(class_data, train_CM_tab, test_CM_tab = NULL){
-  # number in each class- weights 
+# number in each class- weights 
+
+train_N = train_CM_tab %>%
+  as.data.frame() %>%
+  group_by(Reference) %>%
+  summarise(N = sum(Freq)) %>%
+  mutate(serotype = ifelse(Reference == "four" | Reference == 4 , 4,
+                           ifelse(
+                             Reference == "three"| Reference == 3 , 3,
+                             ifelse(
+                               Reference == "two"| Reference == 2, 2,
+                                    ifelse(
+                                      Reference == "one"| Reference == 1, 1,NA)
+                           )))) %>%
+  arrange(serotype)
+
+if(is.null(test_CM_tab)){
+  out  = class_data %>%  
+    mutate(serotype = ifelse(class == "four", 4,
+                             ifelse(
+                               class == "three", 3,
+                               ifelse(class == "two", 2, 1)
+                             ))) %>% 
+    arrange(split,serotype) %>%  
+    mutate(N = train_N$N) %>% 
+    dplyr::summarise(across(Sensitivity:'Balanced Accuracy',~ 
+                              weighted.mean(., w = N , na.rm = T))) %>% 
+    mutate(split = "train")
+} else{
   
-  train_N = train_CM_tab %>%
+  
+  test_N = test_CM_tab %>%
     as.data.frame() %>%
     group_by(Reference) %>%
     summarise(N = sum(Freq)) %>%
-    mutate(serotype = ifelse(Reference == "four" | Reference == 4 , 4,
+    mutate(serotype = ifelse(Reference == "four", 4,
                              ifelse(
-                               Reference == "three"| Reference == 3 , 3,
-                               ifelse(
-                                 Reference == "two"| Reference == 2, 2,
-                                 ifelse(
-                                   Reference == "one"| Reference == 1, 1,NA)
-                               )))) %>%
+                               Reference == "three", 3,
+                               ifelse(Reference == "two", 2, 1)
+                             ))) %>%
     arrange(serotype)
   
-  if(is.null(test_CM_tab)){
-    out  = class_data %>%  
-      mutate(serotype = ifelse(class == "four", 4,
-                               ifelse(
-                                 class == "three", 3,
-                                 ifelse(class == "two", 2, 1)
-                               ))) %>% 
-      arrange(split,serotype) %>%  
-      mutate(N = train_N$N) %>% 
-      dplyr::summarise(across(Sensitivity:'Balanced Accuracy',~ 
-                                weighted.mean(., w = N , na.rm = T))) %>% 
-      mutate(split = "train")
-  } else{
-    
-    
-    test_N = test_CM_tab %>%
-      as.data.frame() %>%
-      group_by(Reference) %>%
-      summarise(N = sum(Freq)) %>%
-      mutate(serotype = ifelse(Reference == "four", 4,
-                               ifelse(
-                                 Reference == "three", 3,
-                                 ifelse(Reference == "two", 2, 1)
-                               ))) %>%
-      arrange(serotype)
-    
-    
-    out  = class_data %>%  
-      mutate(serotype = ifelse(class == "four", 4,
-                               ifelse(
-                                 class == "three", 3,
-                                 ifelse(class == "two", 2, 1)
-                               ))) %>% 
-      arrange(split,serotype) %>%  
-      mutate(N = c(test_N$N, train_N$N)) %>%  
-      group_by(split) %>%  
-      dplyr::summarise(across(Sensitivity:'Balanced Accuracy',~ 
-                                weighted.mean(., w = N , na.rm = T))) 
-  }
   
-  
-  return(out)
+  out  = class_data %>%  
+    mutate(serotype = ifelse(class == "four", 4,
+                             ifelse(
+                               class == "three", 3,
+                               ifelse(class == "two", 2, 1)
+                             ))) %>% 
+    arrange(split,serotype) %>%  
+    mutate(N = c(test_N$N, train_N$N)) %>%  
+    group_by(split) %>%  
+    dplyr::summarise(across(Sensitivity:'Balanced Accuracy',~ 
+                              weighted.mean(., w = N , na.rm = T))) 
+}
+
+ 
+return(out)
 }
 
 # overall function to run model fitting (on the cluster)
-# splits data 
-# runs the classifier
-# extracts training and test performance 
-# returns a data frame of performance metrics 
+ # splits data 
+ # runs the classifier
+ # extracts training and test performance 
+ # returns a data frame of performance metrics 
 
 run_model = function(classifier_name,
                      model_predictors,
@@ -241,8 +192,8 @@ run_model = function(classifier_name,
     primary = primary
   )
   
-
-  # extract class specific metrics (e.g. sens, spec)
+  
+# extract class specific metrics (e.g. sens, spec)
   train_CM = results$trainCM
   test_CM = results$testCM
   
@@ -252,27 +203,27 @@ run_model = function(classifier_name,
   
   class_data = test_CM$byClass %>%  
     as.data.frame() %>% 
-    mutate(split = "test") %>%  
+  mutate(split = "test") %>%  
     bind_rows(train_class_data) %>% 
-    rownames_to_column(var = "class") %>%  
+  rownames_to_column(var = "class") %>%  
     separate(class, into = c(NA, "class"), sep = " ") %>% 
     separate(class, into = c("class", NA)) %>% 
     remove_rownames() 
-  
-  
-  # calculate weighted average from class specific data 
+
+
+# calculate weighted average from class specific data 
   train_CM_tab = train_CM$table
   test_CM_tab = test_CM$table
   
-  summary_class_data =  weighted_av(class_data,train_CM_tab,test_CM_tab )
+   summary_class_data =  weighted_av(class_data,train_CM_tab,test_CM_tab )
   
-  # extract overall accuracy and kappa 
+ # extract overall accuracy and kappa 
   
   train_performance = train_CM$overall %>% 
-    as.data.frame() %>%  
-    mutate(split = "train") %>%  
-    rownames_to_column(var = "metric") %>%  
-    filter(metric == "Accuracy" | metric == "Kappa")
+  as.data.frame() %>%  
+  mutate(split = "train") %>%  
+  rownames_to_column(var = "metric") %>%  
+  filter(metric == "Accuracy" | metric == "Kappa")
   
   performance_data = test_CM$overall %>% 
     as.data.frame() %>%  
@@ -283,11 +234,9 @@ run_model = function(classifier_name,
     pivot_wider(id_cols = split, names_from = metric, values_from = '.') %>% 
     left_join(summary_class_data) %>% 
     pivot_longer(cols = -split, names_to = "metric")
-  
-  
+ 
+
   out = list(performance_data)
   
   return(out)
 }
-
-

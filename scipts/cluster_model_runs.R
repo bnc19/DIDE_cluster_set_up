@@ -13,7 +13,7 @@
 
 # Set up cluster ---------------------------------------------------------------
 
-root = "Q:/project_name"
+root = "Q:/DIDE_cluster_set_up" 
 setwd(root)
 
 # packages and function we want to run on the cluster 
@@ -42,7 +42,7 @@ all_outcome <- as.factor(read.csv("data/all_outcome.csv")$x)
 # predictors data 
 pre_post_change_date_pred <- read.csv("data/pre_post_change_date_pred.csv")[,-1]
 
-source("R/save_cluster_output.R") # load the function which will save our results 
+source("R/funct_save_cluster_output.R") # load the function which will save our results 
 
 # Run the models ---------------------------------------------------------------
 
@@ -65,19 +65,21 @@ M1 <-  obj$lapply(X = rep(1,100),
                 split_prop = 0.9,
                 Seed = 1,
                 primary = F,
-                name = "rf_0.9")
+                name = "rf")
 
-# when you run this, you should see each of the 100 jobs being sent to the 
+# When you run this, you will see each of the 100 jobs being submitted to the 
 # cluster to run. These are sent as a task bundle. I've named that task bundle
-# "rf_0.9" using the name argument. If you don't set a name, an automated name
+# "rf" using the name argument. If you don't set a name, an automated name
 # is generated for you. 
 
 M1$status() # run to check the status of each of your 100 tasks
 
+
+
 # This also shows the names of each individual task. If one task has finished 
 # and you want to acess it whilst the rest are running, you can:
 
-task1 <- obj$task_get("f0a2941ba9f7719edc47b11e1aba365c")
+task1 <- obj$task_get("c4fea844952c536b08e0e1c7d9c7c9f1") # update the task id 
 
 task1$result()
 
@@ -87,24 +89,22 @@ task1$result()
 task1$log()
 
 # If your job does fail, check it runs locally as it is much easier to debug 
-# locally. Sometimes jobs do just fail. Sometimes its memory (try increasing 
+# from there Sometimes jobs do just fail. Sometimes it's memory (try increasing 
 # cores). 
 
 
 # If your computer were to crash now, you would probably find that the object 
 # M1 wasn't saved and you could no longer access your task bundle. 
 
-# As long as you've made a note of your task bundle, this doesn't matter as you 
-# can access it by running:
+# As long as you've made a note of your task bundle name, this doesn't matter as  
+# you can access it by running:
 
-M1 <- obj$task_bundle_get("rf_0.9") # or whatever you name your task bundle 
+M1 <- obj$task_bundle_get("rf") # or whatever you name your task bundle 
 
 
 
-# I also want to run the model using MLR 100 times, which I can do at the same 
-# time as the RF above:
-
-# run the random forrest model 100 times 
+# Next, I also want to fit the model using MLR 100 times, which I can do at the  
+# same time as the RF above:
 
 M2 <-  obj$lapply(X = rep(1,100),
                   FUN = run_model,
@@ -114,7 +114,7 @@ M2 <-  obj$lapply(X = rep(1,100),
                   split_prop = 0.9,
                   Seed = 1,
                   primary = F,
-                  name = "mlr_0.9")
+                  name = "mlr")
 
 # Now I also want to run both models again, but this time setting split_prop = 
 # 0.8. This is very easily done:
@@ -144,7 +144,7 @@ M4 <-  obj$lapply(X = rep(1,100),
 # saving model results ---------------------------------------------------------
 
 
-save_cluster_output(task_bundle_name = "rf_0.9", 
+save_cluster_output(task_bundle_name = "mlr", 
                     output_path = "output")
 
 # this function extracts the results of all 100 runs, summarises them and then 

@@ -11,7 +11,7 @@ save_cluster_output = function(task_bundle_name, output_path = "output") {
   results = all_tasks$results()
  
   summarise_results  =  
-    results %>%  bind_rows() # merge the results from all 100 jobs to one data.frame 
+    results %>%  bind_rows() %>%  # merge the results from all 100 jobs to one data.frame 
     group_by(split, metric) %>% 
     summarise(mean = mean(value), # calclate mean and 95% C()
               lower = quantile(value, p = 0.025),
