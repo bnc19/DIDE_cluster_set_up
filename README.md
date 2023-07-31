@@ -6,7 +6,7 @@ You should definitely read and refer back to these instructions, however, they c
 
 The instructions below and the code in this repo hopefully provide a step-by-step introduction to using the cluster.
 
-* N.B. All instructions for remote access, network mapping, and cluster are DIDE-specific. That means any imperial instructions for the above don't necessarily apply here.* 
+**N.B. All instructions for remote access, network mapping, and cluster are DIDE-specific. That means any imperial instructions for the above don't necessarily apply here.** 
 
 ## Useful contacts:
 * DIDE ICT: Chris De La Force or Paul Bunnett e.g. DIDE ICT accounts, computer help, mapping your network drive.
